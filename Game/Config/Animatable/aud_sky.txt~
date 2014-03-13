@@ -1,0 +1,11 @@
+[className]	=Sky
+[name]		=aud_sky
+[TextureID]	=aud_sky
+[x]  		= 0
+[y]  		= 90
+[w]  		= 770
+[h]  		= 130
+[animate]	= 1
+[frames] 	= 257
+[pixels]	= 256
+[fps]		= 8

@@ -1,0 +1,3 @@
+[Player]	=tsubasa
+[Player]	=tsubasa
+[Player]	=END

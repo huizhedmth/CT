@@ -1,0 +1,43 @@
+/** MatchState.hpp
+ *
+ * Declaration for class MatchState.
+ *
+ * State where a football match is going on
+ *
+ * by Huizhe Li
+ */
+
+# ifndef MATCHSTATE_HPP
+# define MATCHSTATE_HPP
+
+# include "GameState.hpp"
+# include "SDL_CPP.hpp"
+# include "Drawable.hpp"
+# include "Player.hpp"
+# include <vector>
+# include <string>
+
+namespace tsubasa{
+  class MatchState;
+}
+
+class tsubasa::MatchState : public sdl_game::GameState{
+public:
+  ~MatchState();
+  MatchState();
+
+  virtual void render(sdl_cpp::SDL_CRenderer &renderer);
+  virtual void update();
+  virtual bool onEnter();
+  virtual bool onExit();x
+
+  static std::string CLASS;
+
+private:
+  std::vector<tsubasa::Drawable*> m_bgrObjects;
+  std::vector<tsubasa::Drawable*> m_friendPlayers;
+  
+  tsubasa::Player* m_dribblingPlayer;
+};
+
+# endif // MATCHSTATE_HPP

@@ -1,0 +1,31 @@
+[className]		 =Player
+[name]			 =tsubasa
+[textureID]		 =tsubasa
+[speed_dribble]		 =	3
+[speed_attack] 		 =	3
+[speed_defense] 	 =	3
+[drain_rate]    	 =	3
+[recover_rate]  	 =	2
+[dribble]		 =	1, 1
+[pass]			 = 	1, 1
+[shoot]			 =	1, 1
+[tackle]		 = 	1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+[interception]		 = 	1, 1
+[blocking]		 =	1, 1
+[dribble_low]		 = 	1, 1
+[pass_low]		 =	1, 1
+[shoot_low]		 = 	1, 1
+[through_low]		 = 	1, 1
+[follow_low]		 =	1, 1
+[interception_low]	 = 	1, 1
+[clearance_low]		 =	1, 1
+[dribble_high]		 = 	1, 1
+[pass_high]		 =	1, 1
+[shoot_high]		 = 	1, 1
+[through_high]		 = 	1, 1
+[follow_high]		 =	1, 1
+[interception_high]	 = 	1, 1
+[clearance_high]	 =	1, 1
+[stamina]		 =      748,752
+
+

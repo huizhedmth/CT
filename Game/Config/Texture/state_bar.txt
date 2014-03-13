@@ -1,0 +1,8 @@
+[className]	=Texture
+[name]		=state_bar
+[TextureID]	=state_bar
+[x]  		= 20
+[y]  		= 400
+[dw]  		= 180
+[dh]  		= 230
+

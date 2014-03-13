@@ -1,0 +1,24 @@
+/** Team.cpp
+ *
+ * Implementation for class Team.
+ *
+ * by Huizhe Li
+ */
+
+# include "Team.hpp"
+# include <string>
+# include "SDL_CPP.hpp"
+# include "FileReader.hpp"
+
+using namespace sdl_cpp;
+using tsubasa::FileReader;
+using tsubasa::Team;
+using std::string;
+
+void Team::load_team(string filename)
+{
+  SDL_Logger logger;
+  FileReader reader;
+		  
+
+}

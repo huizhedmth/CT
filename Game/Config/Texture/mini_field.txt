@@ -1,0 +1,8 @@
+[className]	=Texture
+[name]		=mini_field
+[TextureID]	=mini_field
+[x]  		= 200
+[y]  		= 370
+[dw]  		= 560
+[dh]  		= 300
+

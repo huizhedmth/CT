@@ -1,0 +1,60 @@
+/** Animatable.hpp
+ *
+ * Declaration for class Animatable : public Drawable.
+ *
+ * Representa a live  object that can be animated.
+ *
+ * by Huizhe Li
+ */
+
+# ifndef ANIMATABLE_HPP
+# define ANIMATABLE_HPP
+
+# include "Drawable.hpp"
+
+
+namespace tsubasa{
+  class Animatable;
+}
+
+class tsubasa::Animatable : public tsubasa::Drawable{
+public:
+
+  Animatable();
+  virtual bool load(tsubasa::FileReader &reader);
+  virtual void draw(sdl_cpp::SDL_CRenderer &renderer);
+  virtual void update();
+
+  /* return a string representation of the object */
+  virtual std::string to_string();
+
+  static std::string CLASS;
+
+protected:
+
+  /* left-up corner */
+  int m_x;    
+  int m_y;
+
+  /* size of texture */
+  int m_w;
+  int m_h;
+
+  /* size of appearance */
+  int m_dw;
+  int m_dh;
+
+  int m_newFrame;       /* number of updates() it takes to move */
+  int m_currentFrame;   /* frame index into its sprite sheet */
+  int m_updateCount;    /* times update() gets called */
+
+  int m_fps;            /* animation speed */
+  int m_pixels;         /* length of a frame unit */
+  int m_frames;         /* number of frames in src image */
+  int m_step;           /* number of pixels as interval */
+
+
+  int m_animateDirection; /* 1 for row, 2 for col */
+};
+
+# endif // ANIMATABLE_HPP

@@ -1,0 +1,28 @@
+/** Drawable.cpp
+ *
+ * Implementation of class Drawable: public class Object.
+ *
+ * by Huizhe Li
+ */
+
+# include "Drawable.hpp"
+# include <string>
+
+using namespace sdl_cpp;
+using tsubasa::Drawable;
+using std::string;
+
+void Drawable::update(int speedFactor)
+{
+  // by default static
+}
+
+string Drawable::get_name()
+{
+  return m_name;
+}
+
+Drawable::~Drawable()
+{
+  // do nothing by default
+}

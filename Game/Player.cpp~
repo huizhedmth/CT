@@ -1,0 +1,97 @@
+/** Player.cpp
+ *
+ * Implementation of class Player: public Object
+ *
+ * by Huizhe Li
+ */
+
+# include "Player.hpp"
+# include "SDL_CPP.hpp"
+# include "Drawable.hpp"
+# include <string>
+# include <fstream>
+# include <iostream>
+# include <cstdlib>
+# include <cstring>
+# include "FileReader.hpp"
+# include "TextureManager.hpp"
+
+using tsubasa::Player;
+using tsubasa::Drawable;
+using sdl_game::TextureManager;
+using sdl_cpp::SDL_CRenderer;
+using sdl_cpp::SDL_Logger;
+using std::string;
+using std::ifstream;
+using std::cerr;
+using std::getline;
+using std::vector;
+
+string Player::CLASS = "Player";
+
+Player::Player(){}
+
+Player::~Player()
+{  
+}
+
+void Player::update(int speedFactor)
+{}
+
+void Player::draw(SDL_CRenderer &renderer)
+{
+  // fow now just draw a fake head
+  TextureManager::get_instance()->draw(m_textureID, renderer,
+  				     350, 120, 80, 250);
+}
+
+bool Player::load(FileReader &reader)
+{
+  SDL_Logger logger;
+  static string func = CLASS + "::load";
+  char delim = '=';
+
+  try{
+    // read name
+    m_name = reader.next_string(delim);
+    // read textureID
+    m_textureID = reader.next_string(delim);
+    // non-array stats
+    FieldStatType fieldStatType = SPEED_DRIBBLE;
+    while(fieldStatType < FIELD_STAT_END){
+      m_fieldStats[fieldStatType] = reader.next_int(delim);
+      fieldStatType = FieldStatType(fieldStatType + 1);
+    }
+  
+    // array stats indexed by level
+    SkillStatType skillStatType = DRIBBLE;
+    int lev;
+    while(skillStatType < SKILL_STAT_END){
+      lev = reader.next_int_array(m_skillStats[skillStatType], delim);
+      // sanity check
+      if (lev != 64){
+	/*      logger.log(std::cout, 
+		func + "- warning: incomplete player stats of type " + 
+		std::to_string(skillStatType) + ". " + std::to_string(lev) +
+		" numbers read. In file " + filename);*/
+      }    
+      skillStatType = SkillStatType(skillStatType+1);
+    }
+  }catch(...){
+    logger.log(std::cout, func + "unrecognized file format");
+  }
+
+  return true;
+}
+
+string Player::to_string()
+{
+  string line = "Player";
+  
+  return line;
+}
+
+int Player::get_speed()
+{
+  return m_fieldStats[SPEED_DRIBBLE];
+}

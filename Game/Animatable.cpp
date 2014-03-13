@@ -1,0 +1,106 @@
+/** Animatable.cpp
+ *
+ * Implementation of class Animatable
+ *
+ * by Huizhe Li
+ */
+
+# include "Animatable.hpp"
+# include "SDL_CPP.hpp"
+# include "FileReader.hpp"
+# include "TextureManager.hpp"
+# include "TsubasaInputHandler.hpp"
+# include <string>
+
+using tsubasa::FileReader;
+using tsubasa::Animatable;
+
+using namespace sdl_cpp;
+using namespace sdl_game;
+using std::string;
+
+string Animatable::CLASS = "Animatable";
+
+Animatable::Animatable()
+{
+  m_updateCount = 0;
+  m_currentFrame = 0;  
+}
+
+void Animatable::update()
+{
+  // by default static
+}
+
+void Animatable::draw(SDL_CRenderer &renderer)
+{
+  TextureManager::get_instance()->
+    draw_frame(m_textureID, renderer,
+	       m_w, m_h,              // frame size in src
+	       m_x, m_y,              // destination
+	       m_dw, m_dh,            // target width,height
+	       m_animateDirection,    // 1 (row) or 2 (col)
+	       m_currentFrame,        // currentFrame
+	       m_step                 // frameStep       
+	       );
+			      
+}
+
+bool Animatable::load(FileReader &reader)
+{
+  SDL_Logger logger;
+  static string func = CLASS + "::load";
+  char delim = '=';
+
+  try{
+    // read name
+    m_name = reader.next_string(delim);
+    // read texture ID
+    m_textureID = reader.next_string(delim);
+    // read x and y 
+    m_x = reader.next_int(delim);
+    m_y = reader.next_int(delim);
+    m_w = TextureManager::get_instance()->get_width(m_textureID);
+    m_h = TextureManager::get_instance()->get_height(m_textureID);
+    // read dw and dh
+    m_dw = reader.next_int(delim);
+    m_dh = reader.next_int(delim);
+
+    // read animateType
+    m_animateDirection = reader.next_int(delim);
+    
+    // read frames
+    m_frames = reader.next_int(delim);
+    
+    // read pixels
+    m_pixels = reader.next_int(delim);
+
+    // read fps
+    m_fps = reader.next_int(delim);
+    
+    m_newFrame = m_fps;
+
+    // calculate m_w/m_h and m_step
+    if (m_animateDirection == 1){// row
+
+      m_step = (m_w - m_pixels) / (m_frames-1);
+      m_w = m_pixels;
+    } else {                // col
+      m_step = (m_h - m_pixels) / (m_frames-1);
+      m_h = m_pixels;
+    }
+
+  }catch(...){
+    logger.log(std::cout, func + "unrecognized file format");
+    return false;
+  }
+
+  return true;
+}
+
+string Animatable::to_string()
+{
+  // stub
+  string str = "Animatable";
+  return str;
+}

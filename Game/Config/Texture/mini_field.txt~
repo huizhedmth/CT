@@ -1,0 +1,9 @@
+[className]	=Drawable
+[name]		=mini_field
+[ID]		=mini_field
+[x]  		= 200
+[y]  		= 370
+[w]  		= 560
+[h]  		= 300
+[layer]		= 0
+[animate]	= 0

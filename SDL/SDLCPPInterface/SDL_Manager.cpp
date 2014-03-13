@@ -1,0 +1,63 @@
+/** SDL_Manager.cpp
+ *
+ * Implementation of class SDL_Manager.
+ *
+ * by Huizhe Li
+ */
+
+# include "SDL_Manager.hpp"
+# include "SDL_Logger.hpp"
+# include <SDL2/SDL.h>
+# include <iostream>
+
+using sdl_cpp::SDL_Manager;
+using std::string;
+
+SDL_Manager* SDL_Manager::s_theManager = nullptr;
+
+bool SDL_Manager::init(Uint32 flags)
+{
+  int rc;
+  Uint32 mask;
+  static string func = "SDL_Manager::init";
+
+  SDL_Logger logger;
+
+  mask = SDL_WasInit(flags);
+  if (mask == flags){
+    logger.log(std::cout, func + ": " + 
+	       "specified subsystem already initialized. " +
+	       "No operation being performed.");
+    return false;
+  }
+
+  rc = SDL_Init(flags);
+  if (rc != 0){
+    logger.log(std::cerr, func + ": error: " + SDL_GetError());
+    return false;
+  }
+
+  return true;
+}
+
+void SDL_Manager::delay(int miliseconds)
+{
+  SDL_Delay(miliseconds);
+}
+
+void SDL_Manager::quit()
+{
+  SDL_Quit();
+}
+
+const Uint8* SDL_Manager::get_key_states()
+{
+  return SDL_GetKeyboardState(nullptr);
+}
+
+SDL_Manager* SDL_Manager::get_instance(){
+  if (s_theManager == nullptr){
+    s_theManager = new SDL_Manager();
+  }
+  return s_theManager;
+}

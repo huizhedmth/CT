@@ -1,0 +1,29 @@
+CXX = g++
+
+SDL_INCLUDE = -I/usr/local/include/SDL2 -D_REENTRANT
+SDL_IMAGE_INCLUDE = -I/usr/local/include/
+CXXFLAGS = -Wall -c -std=c++11 $(SDL_INCLUDE) $(SDL_IMAGE_INCLUDE)
+
+
+
+OBJ = SDL_Logger.o SDL_Initializer.o SDL_CWindow.o SDL_CTexture.o SDL_CRenderer.o
+
+all: $(OBJ)
+
+SDL_Logger.o: SDL_Logger.cpp SDL_Logger.hpp 
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+SDL_Initializer.o: SDL_Initializer.cpp SDL_Initializer.hpp SDL_Logger.hpp
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+SDL_CWindow.o: SDL_CWindow.cpp SDL_CWindow.hpp SDL_Logger.hpp
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+SDL_CTexture.o: SDL_CTexture.cpp SDL_Logger.hpp SDL_CRenderer.hpp
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+SDL_CRenderer.o: SDL_CRenderer.cpp SDL_Logger.hpp SDL_CRenderer.hpp SDL_CWindow.hpp 
+	$(CXX) $< $(CXXFLAGS) -o $@
+
+clean:
+	rm -f $(OBJ)

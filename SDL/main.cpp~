@@ -1,0 +1,51 @@
+#include "SDL_Logger.hpp"
+#include "SDL_Initializer.hpp"
+#include "SDL_CWindow.hpp"
+#include "SDL_CRenderer.hpp"
+#include <iostream>
+
+#include <SDL_image.h>
+
+using sdl_cpp::SDL_Logger;
+using sdl_cpp::SDL_Initializer;
+using sdl_cpp::SDL_CWindow;
+using sdl_cpp::SDL_CRenderer;
+using sdl_cpp::SDL_CTexture;
+
+int main()
+{
+  SDL_Initializer initializer;
+  SDL_CWindow window;
+  SDL_CRenderer renderer;
+  SDL_CTexture texture;
+  int rc;
+
+  rc = initializer.init(SDL_INIT_EVERYTHING);
+  if (rc != 0)exit(1);
+
+  window.create("hello!", 0, 0, 800, 600, SDL_WINDOW_SHOWN);
+  renderer.create(window);
+
+
+  texture.load("1.png", renderer);
+  
+  renderer.set_color(255, 255, 255, 255);
+  renderer.clear();
+
+  renderer.copy(texture, 0, 0);
+
+
+  renderer.present();
+
+  
+  SDL_Delay(1000);
+
+  
+
+
+  SDL_Quit();
+
+  return 0;
+}
+    
+

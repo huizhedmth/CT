@@ -1,0 +1,4 @@
+[Team1]			=china
+[Team2]			=japan
+[FirstHalf]		=30
+[SecondHalf]		=30

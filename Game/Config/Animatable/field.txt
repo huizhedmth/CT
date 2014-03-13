@@ -1,0 +1,11 @@
+[className]	=FieldBGR
+[name]		=field
+[TextureID]	=field2
+[x]  		= 0
+[y]  		= 215
+[w]  		= 770
+[h]  		= 140
+[animate]	= 2
+[frames] 	= 3
+[pixels]	= 40
+[fps]		= 4

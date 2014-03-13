@@ -1,0 +1,47 @@
+/** Texture.hpp
+ *
+ * Declaration for class Texture : public Drawable.
+ *
+ * Represent a static texture, which may move around but not animating.
+ *
+ * by Huizhe Li
+ */
+
+# ifndef TEXTURE_CPP
+# define TEXTURE_CPP
+
+# include "Drawable.hpp"
+
+namespace tsubasa{
+  class Texture;
+}
+
+class tsubasa::Texture : public Drawable{
+public:
+  
+  virtual bool load(tsubasa::FileReader &reader);
+  virtual void draw(sdl_cpp::SDL_CRenderer &renderer);
+  virtual void update();
+
+  /* return a string representation of the object */
+  virtual std::string to_string();
+
+  static std::string CLASS;
+
+protected:
+
+  /* left-up corner */
+  int m_x;    
+  int m_y;
+
+  /* size of texture */
+  int m_w;
+  int m_h;
+
+  /* size of appearance */
+  int m_dw;
+  int m_dh;
+};
+
+
+# endif // TEXTURE_HPP

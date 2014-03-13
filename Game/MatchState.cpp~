@@ -1,0 +1,110 @@
+/** MatchState.cpp
+ *
+ * Implementation for class MatchState.
+ *
+ * by Huizhe Li
+ */
+
+# include "MatchState.hpp"
+# include "Drawable.hpp"
+# include "Player.hpp"
+# include "ObjectManager.hpp"
+# include "SDL_CPP.hpp"
+# include <vector>
+
+using tsubasa::MatchState;
+using tsubasa::Drawable;
+using tsubasa::Player;
+using namespace sdl_cpp;
+using namespace sdl_game;
+using std::cout;
+using std::endl;
+using std::vector;
+
+void MatchState::render(SDL_CRenderer &renderer)
+{
+  for (vector<Drawable*>::iterator it = m_bgrObjects.begin();
+       it != m_bgrObjects.end();
+       it ++){
+    (*it)->draw(renderer);
+  }
+
+  m_dribblingPlayer->draw(renderer);
+}
+
+void MatchState::update()
+{
+  for (vector<Drawable*>::iterator it = m_bgrObjects.begin();
+       it != m_bgrObjects.end();
+       it ++){
+        (*it)->update(m_dribblingPlayer->get_speed());
+    //(*it)->update();
+  }
+}
+
+bool MatchState::onEnter()
+{
+  std::cout << "MatchState::onEnter" << std::endl;
+  return true;
+}
+
+bool MatchState::onExit()
+{
+  std::cout << "MatchState::onExit" << std::endl;
+  return true;
+}
+
+MatchState::~MatchState()
+{
+}
+
+MatchState::MatchState()
+{
+  // the following code are for testing use only
+  // will be removed later
+  
+  // load background objects
+  ObjectManager* objectManager = ObjectManager::get_instance();
+  Drawable* p_object;
+
+  p_object = objectManager->get_object("aud_sky");
+  if (p_object != nullptr){
+    m_bgrObjects.push_back(p_object);
+  } else {
+    std::cout << "object does not exist " << endl;
+  }
+
+  p_object = objectManager->get_object("field");
+  if (p_object != nullptr){
+    m_bgrObjects.push_back(p_object);
+  } else {
+    std::cout << "object does not exist " << endl;
+  }
+
+  p_object = objectManager->get_object("mini_field");
+  if (p_object != nullptr){
+    m_bgrObjects.push_back(p_object);
+  } else {
+    std::cout << "object does not exist " << endl;
+  }
+
+  p_object = objectManager->get_object("state_bar");
+  if (p_object != nullptr){
+    m_bgrObjects.push_back(p_object);
+  } else {
+    std::cout << "object does not exist " << endl;
+  }
+
+  
+  // add tsubasa
+  p_object = objectManager->get_object("tsubasa");
+  if (p_object != nullptr){
+  // set tsubasa to be dribbling player
+    m_dribblingPlayer = (Player*) p_object;
+    m_friendPlayers.push_back(p_object);
+  } else {
+    std::cout << "object does not exist " << endl;
+  }
+
+
+}

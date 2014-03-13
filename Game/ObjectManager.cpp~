@@ -1,0 +1,128 @@
+/** ObjectManager.cpp
+ *
+ * Implementation for class ObjectManager.
+ *
+ * by Huizhe Li
+ */
+
+# include "ObjectManager.hpp"
+# include "Drawable.hpp"
+# include "SDL_CPP.hpp"
+# include "FileReader.hpp"
+# include "Texture.hpp"
+# include "Animatable.hpp"
+# include "Animatables.hpp"
+# include <string>
+# include <iostream>
+
+using tsubasa::ObjectManager;
+using tsubasa::Drawable;
+using tsubasa::FileReader;
+using tsubasa::Texture;
+using tsubasa::Animatable;
+using tsubasa::FieldBGR;
+using tsubasa::SkyBGR;
+using std::string;
+using std::map;
+using std::ifstream;
+
+
+using namespace sdl_cpp;
+
+string ObjectManager::CLASS = "ObjectManager";
+
+ObjectManager* ObjectManager::m_theManager = nullptr;
+
+ObjectManager::ObjectManager()
+{}
+
+ObjectManager* ObjectManager::get_instance()
+{
+  if (m_theManager == nullptr){
+    m_theManager = new ObjectManager();
+    return m_theManager;
+  }
+  else return m_theManager;
+}
+
+bool ObjectManager::load_object(string filename)
+{
+  SDL_Logger logger;
+  FileReader reader;
+  char delim = '=';
+
+  string func = CLASS + "::load_object";
+  if (!reader.open(filename)){
+    logger.log(std::cout, func + ": failed loading file " + filename);
+    return false;
+  }
+
+  /* Create a pointer to base class Drawable,
+   * but point it to (potentially) subclasses.
+   * It's correct behavior will be ensured by 
+   * polymorphism
+   */
+  Drawable* p_drawable;
+
+  string className = reader.next_string(delim);
+  
+  // dispatch by className
+  p_drawable = load_object_by_className(className, reader);
+  
+  // sanity check
+  if (p_drawable == nullptr){
+    logger.log(std::cout, func + ": failed inflating object ");
+  } else {  // put it into object map
+    m_objectMap[p_drawable->get_name()] = p_drawable;
+  }
+
+  reader.close();
+  return true;
+}
+
+Drawable* ObjectManager::
+load_object_by_className(string className, FileReader &reader)
+{
+  Drawable* p_drawable = nullptr;
+  SDL_Logger logger;
+  string func = CLASS + "::load_object_by_className";
+
+
+  if (className.compare("Texture") == 0){
+    p_drawable = new Texture();
+  } else if (className.compare("Animatable") == 0){
+    p_drawable = new Animatable();
+  } else if (className.compare("FieldBGR") == 0){
+    p_drawable = new FieldBGR();
+  } else if (className.compare("SkyBGR") == 0){
+    p_drawable = new SkyBGR();
+  }else if (className.compare("Player") == 0){
+    p_drawable = new Player();
+  } else {
+    // stub
+    std::cout << func << " not handled." << std::endl;
+    return nullptr;
+  }
+
+  if (!p_drawable->load(reader)){
+    delete p_drawable;
+    p_drawable = nullptr;
+    logger.log(std::cout, func + ": class name not supported");
+  }
+
+  return p_drawable;
+}
+
+map <string, Drawable*> ObjectManager::get_map()
+{
+  return m_objectMap;
+}  
+
+Drawable* ObjectManager::get_object(string name)
+{
+  if (m_objectMap.count(name) != 0){
+    return m_objectMap[name];
+  } else {
+    return nullptr;
+  }
+}

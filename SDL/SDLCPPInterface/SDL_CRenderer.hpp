@@ -1,0 +1,107 @@
+/** SDL_CRenderer.hpp
+ *
+ * Declaration for class SDL_CRenderer, a wrapper
+ * of SDL_Renderer structure and related utilities.
+ *
+ * by Huizhe Li
+ */
+
+# ifndef SDL_CRENDERER_HPP
+# define SDL_CRENDERER_HPP
+
+# include <SDL2/SDL.h>
+# include "SDL_CWindow.hpp"
+# include <string>
+
+namespace sdl_cpp{
+  class SDL_CRenderer;
+  class SDL_CTexture;
+}
+
+class sdl_cpp::SDL_CRenderer{
+public:
+  SDL_CRenderer();
+  ~SDL_CRenderer();
+
+  /* wrappers */
+  bool create(const sdl_cpp::SDL_CWindow &window, 
+	      int index = -1, 
+	      Uint32 flags = 0);
+  void set_color(Uint8 r=0, Uint8 g=0, Uint8 b=0, Uint8 a=255);
+  void clear();
+  void present();
+
+  /* copy the whole texture as it is, to destined coordinator */
+  bool copy(const sdl_cpp::SDL_CTexture &texture, int x, int y);
+
+  /* full-controlled copy */
+  bool copy(const sdl_cpp::SDL_CTexture &texture,
+	    int srcx, int srcy, int srcw, int srch,
+	    int dstx, int dsty, int dstw, int dsth);
+
+  bool copyEx(const sdl_cpp::SDL_CTexture &texture, int x, int y,
+
+	      int flip = SDL_FLIP_NONE,
+	      const SDL_Point* center = nullptr,
+	      const double angle = 0);
+
+
+
+  bool copyEx(const sdl_cpp::SDL_CTexture &texture, 
+	      int srcx, int srcy, int srcw, int srch,
+	      int dstx, int dsty, int dstw, int dsth,
+
+	      int flip = SDL_FLIP_NONE,
+	      const SDL_Point* center = nullptr,
+	      const double angle = 0);
+
+	      
+	      
+  SDL_Renderer* get_renderer() const;
+
+  static std::string CLASS;
+
+  protected:
+  SDL_Renderer* m_renderer;
+
+  private:
+  /* specify with SDL_Rect's */
+  bool copy(const sdl_cpp::SDL_CTexture &texture,
+	    SDL_Rect &srcRect, SDL_Rect &dstRect);
+
+  bool copyEx(const sdl_cpp::SDL_CTexture &texture,
+	      SDL_Rect &srcRect, SDL_Rect &dstRect,
+
+	      int flip = SDL_FLIP_NONE,
+	      const SDL_Point* center = nullptr,
+	      const double angle = 0);
+
+
+
+};
+
+
+class sdl_cpp::SDL_CTexture{
+public:
+  SDL_CTexture();
+  ~SDL_CTexture();
+
+  /* Create a texture from image file.
+   * It calls SDL_LoadBMP internally, and takes care of freeing
+   * temporary SDL_Surface.
+   */
+
+  bool load(std::string filename, const sdl_cpp::SDL_CRenderer &renderer);
+
+  SDL_Texture* get_texture() const;
+  int get_width() const;
+  int get_height() const;
+  static std::string CLASS;
+
+protected:
+  SDL_Texture* m_texture;
+  int m_w;/* texture width */
+  int m_h;/* texture height */
+};
+
+#endif // SDL_CRENDERER_HPP

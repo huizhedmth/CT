@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# A shell script that builds a static library 'libsdlhelper' 
+# and make it usable to local users
+#
+# by Huizhe Li
+
+CWD=$(pwd)
+CXX=g++
+
+declare -a FILES
+declare -a HEADERS
+
+FILES=(SDL_Logger.o SDL_Manager.o SDL_CWindow.o SDL_CTexture.o SDL_CRenderer.o)
+HEADERS=(SDL_CPP.hpp SDL_Logger.hpp SDL_Manager.hpp SDL_CWindow.hpp SDL_CRenderer.hpp
+)
+SIZE=${#FILES[@]}
+SIZEH=${#HEADERS[@]}
+
+LIB=~/lib
+INCLUDE=~/include
+
+TARGET=libsdlcpp.so
+
+for (( i=0; i<SIZE; i++))
+do
+    echo "checking file ${FILES[$i]} ..."
+
+    if [ ! -f ${FILES[$i]} ]
+    then
+	echo "file ${FILES[$i]} not found. Abort."
+	exit 1
+    fi
+done
+
+for (( i=0; i <SIZEH; i++))
+do
+    echo "checking file ${HEADERS[$i]} ..."
+    if [ ! -f ${HEADERS[$i]} ]
+    then
+	echo "file ${HEADER[$i]} not found. Abort."
+	exit 1
+    fi
+done
+
+echo "building archive..."
+$CXX -shared -o $TARGET ${FILES[*]}
+
+echo "copying files..."
+cp $TARGET $LIB
+ 
+for (( i=0; i<SIZEH; i++))
+do
+    cp ${HEADERS[$i]} $INCLUDE
+done
+
+echo "library built"

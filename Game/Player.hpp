@@ -1,0 +1,95 @@
+/** Player.hpp
+ *
+ * Declaration for class Player: public Object
+ *
+ * Represents a football player.
+ *
+ * by Huizhe Li
+ */
+
+# ifndef PLAYER_HPP
+# define PLAYER_HPP
+
+# include "SDL_CPP.hpp"
+# include "Drawable.hpp"
+# include "FileReader.hpp"
+# include <string>
+# include <vector>
+
+namespace tsubasa{
+  class Player;
+  static const int PLAYER_MAX_LEVEL = 64; 
+}
+
+class tsubasa::Player : public tsubasa::Drawable{
+public:
+  Player();
+  ~Player();
+  /* @Override */
+  virtual bool load(tsubasa::FileReader &reader);
+  virtual void draw(sdl_cpp::SDL_CRenderer &renderer);
+  virtual void update();
+  virtual std::string to_string();
+  
+  static std::string CLASS;
+  static int MAX_LEVEL;
+  
+  int get_speed();
+protected:
+  
+  /* player statistics */
+  /*********************/
+  enum FieldStatType{
+    SPEED_DRIBBLE = 0,
+    SPEED_ATTACK = 1,
+    SPEED_DEFENSE = 2,
+    DRAIN_RATE = 3,
+    RECOVER_RATE = 4,
+    FIELD_STAT_END = 5
+  };
+
+  enum SkillStatType{
+    /* grounder */
+    DRIBBLE = 0,
+    PASS = 1,
+    SHOOT = 2,
+    TACKLE = 3,
+    INTERCEPTION = 4,
+    BLOCKING = 5,
+
+    /* low */
+    DRIBBLE_LOW = 6,
+    PASS_LOW = 7,
+    SHOOT_LOW = 8,
+    THROUGH_LOW = 9,
+    FOLLOW_LOW = 10,
+    INTERCEPTION_LOW = 11,
+    CLEARANCE_LOW = 12,
+
+
+    /* high */
+    DRIBBLE_HIGH = 13,
+    PASS_HIGH = 14,
+    SHOOT_HIGH = 15,
+    THROUGH_HIGH = 16,
+    FOLLOW_HIGH = 17,
+    INTERCEPTION_HIGH = 18,
+    CLEARANCE_HIGH = 19,
+    
+    STAMINA = 20,
+    SKILL_STAT_END = 21
+  };
+
+  int m_fieldStats[FIELD_STAT_END - SPEED_DRIBBLE];
+  int m_skillStats[SKILL_STAT_END - DRIBBLE][PLAYER_MAX_LEVEL];
+  
+  /* player state */
+  bool m_isHit;
+  bool m_isDribbling;
+  int m_currentStamina;
+
+  /* associated drawable objects */
+  std::vector<tsubasa::Drawable*> m_drawableParts;
+};
+
+# endif // PLAYER_HPP

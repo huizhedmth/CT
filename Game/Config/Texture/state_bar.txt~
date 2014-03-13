@@ -1,0 +1,9 @@
+[className]	=Drawable
+[name]		=state_bar
+[ID]		=state_bar
+[x]  		= 20
+[y]  		= 400
+[w]  		= 180
+[h]  		= 230
+[layer]		= 0
+[animate]	= 0

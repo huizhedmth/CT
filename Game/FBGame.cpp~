@@ -1,0 +1,216 @@
+/** FBGame.cpp
+ *
+ * Implementation of class FBGame.
+ *
+ * by Huizhe Li
+ */
+
+# include "FBGame.hpp"
+# include "Drawable.hpp"
+# include "Player.hpp"
+# include "FileReader.hpp"
+# include "SDL_CPP.hpp"
+# include <string>
+# include <vector>
+# include <iostream>
+# include "TextureManager.hpp"
+# include "InputHandler.hpp"
+# include <SDL2/SDL.h>
+
+using std::string;
+using std::cerr;
+using std::cout;
+using std::endl;
+using std::map;
+using std::vector;
+using namespace sdl_cpp;
+using namespace sdl_game;
+using namespace tsubasa;
+
+string FBGame::CLASS = "FBGame";
+
+FBGame::FBGame()
+{
+  m_isRunning = false;
+  m_textureManager = TextureManager::get_instance();
+  m_objectManager = ObjectManager::get_instance();
+  m_SDLManager = SDL_Manager::get_instance();
+  m_inputHandler = TsubasaInputHandler::get_instance();
+
+  m_currentState = GAME_STATE_MEETING;
+}
+
+void FBGame::quit()
+{
+  m_SDLManager->quit();
+}
+
+bool FBGame::init(string title, int x, int y, int w, int h, Uint32 flags)
+{
+  // init SDL
+  // --------------------------------------------------
+  if (m_SDLManager->init(SDL_INIT_EVERYTHING) == false){
+    return false;
+  }
+
+  // create window
+  if (m_window.create(title.c_str(), x, y, w, h, flags) == false) {
+    return false;
+  }
+
+  // tie renderer
+  if (m_renderer.create(m_window) == false) {
+    return false;
+  }
+
+  // set fps
+  m_renderer.set_color(0, 0, 0, 255);
+  m_renderer.clear();
+
+  return true;
+}
+
+
+void FBGame::update()
+{
+  m_stateMachine.update();
+}
+
+void FBGame::handle_events()
+{
+  m_inputHandler->update();
+
+  if (m_inputHandler->is_key_down(SDL_SCANCODE_A)){
+    m_stateMachine.pop_state();
+    m_stateMachine.push_state(new MeetingMenuState());
+    return;
+  } else if (m_inputHandler->is_key_down(SDL_SCANCODE_B)){
+    m_stateMachine.pop_state();
+    m_stateMachine.push_state(new MatchState());
+    return;
+
+  } else if (m_inputHandler->is_key_down(SDL_SCANCODE_Q)){
+    m_isRunning = false;
+    return;
+  }
+  //  std::cout << "nothing happened." << std::endl;
+}
+
+void FBGame::render()
+{
+  m_renderer.clear();
+
+  m_stateMachine.render(m_renderer);
+
+  m_renderer.present();
+}
+  
+
+  
+bool FBGame::start()
+{
+  SDL_Logger logger;
+
+  if (!m_isRunning){
+    m_isRunning = true;
+  }
+  else {
+    logger.log(std::cerr, "Game already started!");
+    return false;
+  }
+  
+  // start from a match for now
+
+  MatchState* matchState = new MatchState();
+  m_stateMachine.push_state(matchState);
+  
+  return true;
+}
+
+
+bool FBGame::load_resource()
+{
+  FileReader reader;
+  vector<string> files;
+
+
+  // load textures
+  files.clear();
+  if (!reader.readdir("./Resources/Drawable/", files)){
+    return false;
+  }
+  for(vector<string>::iterator it = files.begin();
+      it != files.end(); 
+      it++){
+    if (!m_textureManager->load(*it, m_renderer)){
+      return false;
+    }
+  }
+
+  files.clear();
+  if (!reader.readdir("./Resources/Player/", files)){
+    return false;
+  }
+  for(vector<string>::iterator it = files.begin();
+      it != files.end(); 
+      it++){
+    if (!m_textureManager->load(*it, m_renderer)){
+      return false;
+    }
+  }
+
+  
+  // inflate objects
+
+  // push entries to vector 'files'
+  files.clear();
+  if (!reader.readdir("./Config/Texture/", files)){
+    return false;
+  }
+
+  if (!reader.readdir("./Config/Animatable/", files)){
+    return false;
+  }
+
+
+  if (!reader.readdir("./Config/Player/", files)){
+    return false;
+  }
+
+  
+  for(vector<string>::iterator it = files.begin();
+      it != files.end(); 
+      it++){
+    if (!m_objectManager->load_object(*it)){
+      return false;
+    }
+  }
+  
+
+  return true;
+}
+
+bool FBGame::is_running()
+{
+  return m_isRunning;
+}
+
+void FBGame::loading_check()
+{
+  // print info of all loaded objects and textures
+
+  map<string, Drawable*> objectMap = m_objectManager->get_map();
+  for (map<string, Drawable*>::iterator it = objectMap.begin();
+       it != objectMap.end();
+       it++){
+    cout << "New Object:" << it->second->to_string() << endl;
+  }
+
+  
+  map<string, SDL_CTexture*> textureMap = m_textureManager->get_map();
+  for (map<string, SDL_CTexture*>::iterator it = textureMap.begin();
+       it != textureMap.end();
+       it++){
+    cout << "New Texture:" << it->first << endl;
+  }
+}
